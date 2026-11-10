@@ -1,0 +1,82 @@
+
+name: Publish Cookbook
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Build PDF
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+
+      - name: Prepare website
+        run: |
+          mkdir -p public
+          cp main.pdf public/cookbook.pdf
+          cat > public/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Snorp Food</title>
+            <style>
+              body {
+                margin: 0;
+                font-family: system-ui, sans-serif;
+              }
+              iframe {
+                width: 100%;
+                height: 100vh;
+                border: none;
+              }
+            </style>
+          </head>
+          <body>
+            <iframe src="cookbook.pdf"
+                    title="Snorp Food">
+            </iframe>
+            <p>
+              <a href="cookbook.pdf">
+                Open or download PDF
+              </a>
+            </p>
+          </body>
+          </html>
+          EOF
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
