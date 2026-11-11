@@ -25,10 +25,20 @@
 \titleformat{\section}{\large\bfseries\color{ink}}{}{0pt}{}
 \newcommand{\smallheading}[1]{\par\vspace{5pt}{\color{sage}\bfseries\small\MakeUppercase{#1}}\par\nobreak\vspace{-6pt}\noindent{\color{line}\rule{\linewidth}{0.6pt}}\par\vspace{1pt}}\newcommand{\photo}[2]{\begin{minipage}[c][1.7in][c]{\linewidth}\centering\IfFileExists{#1}{\includegraphics[width=\linewidth,height=1.7in,keepaspectratio]{#1}}{\begin{tikzpicture}\fill[cream] (0,0) rectangle (5.15,3.65);\draw[line,line width=.6pt] (0,0) rectangle (5.15,3.65);\node[text=muted,align=center,font=\small] at (2.575,1.83) {PHOTO PLACEHOLDER\\[3pt]\scriptsize #2};\end{tikzpicture}}\end{minipage}}
 \newcommand{\recipeheader}[5]{%
-\phantomsection\addcontentsline{toc}{section}{#1}
+\phantomsection\addcontentsline{toc}{section}{#1}%
+\noindent
+\begin{minipage}[b]{0.48\linewidth}
 {\fontsize{27}{30}\selectfont\bfseries #1}\par
-{\large\color{sage}#2}\par\vspace{5pt}
-{\small\textbf{\color{sage}\faIcon{clock}}~#3\quad\textbf{\color{sage}\faIcon{utensils}}~#4\quad\textbf{\color{sage}\faIcon{link}}~#5}\par\vspace{9pt}
+\end{minipage}%
+\hfill
+\begin{minipage}[b]{0.50\linewidth}
+\raggedleft
+{\small
+\textbf{\color{sage}\faIcon{clock}}~#3\quad
+\textbf{\color{sage}\faIcon{utensils}}~#4\quad
+\textbf{\color{sage}\faIcon{link}}~#5}
+\end{minipage}\par
+{\large\color{sage}#2}\par\vspace{9pt}
 }
 \begin{document}
 \begin{titlepage}
